@@ -48,6 +48,21 @@ app.delete("/api/trips/:id", async (req, res) => {
   }
 });
 
+app.put("/api/trips/:id/stops", async (req, res) => {
+  try {
+    const trip = await TripData.findById(req.params.id);
+    if (!trip) {
+      return res.status(404).json({ error: "Trip not found" });
+    }
+
+    trip.stops.push(req.body);
+    await trip.save();
+    res.json(trip);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 async function startServer() {
   try {
     await mongoose.connect(MONGODB_URI);
