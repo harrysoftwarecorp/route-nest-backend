@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 
 const stopSchema = new mongoose.Schema({
+  id: {
+    type: Number,
+  },
   name: {
     type: String,
     required: true,
@@ -79,3 +82,14 @@ const tripDataSchema = new mongoose.Schema({
 });
 
 export const TripData = mongoose.model("TripData", tripDataSchema);
+// Add pre-save middleware to generate stop IDs
+tripDataSchema.pre("save", function (next) {
+  if (this.isModified("stops")) {
+    this.stops.forEach((stop, index) => {
+      if (!stop.id) {
+        stop.id = Date.now() + index;
+      }
+    });
+  }
+  next();
+});

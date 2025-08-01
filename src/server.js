@@ -55,7 +55,34 @@ app.put("/api/trips/:id/stops", async (req, res) => {
       return res.status(404).json({ error: "Trip not found" });
     }
 
-    trip.stops.push(req.body);
+    const newStop = {
+      ...req.body,
+      id: Date.now() + trip.stops.length,
+    };
+
+    trip.stops.push(newStop);
+    await trip.save();
+    res.json(trip);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.delete("/api/trips/:id/stops/:stopId", async (req, res) => {
+  try {
+    const trip = await TripData.findById(req.params.id);
+    if (!trip) {
+      return res.status(404).json({ error: "Trip not found" });
+    }
+
+    const stopIndex = trip.stops.findIndex(
+      (stop) => stop.id === Number(req.params.stopId)
+    );
+    if (stopIndex === -1) {
+      return res.status(404).json({ error: "Stop not found" });
+    }
+
+    trip.stops.splice(stopIndex, 1);
     await trip.save();
     res.json(trip);
   } catch (error) {
