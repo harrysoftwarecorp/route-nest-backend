@@ -11,7 +11,7 @@ const MONGODB_URI =
 
 app.use(
   cors({
-    origin: "https://route-nest.onrender.com",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
   })
 );
 
