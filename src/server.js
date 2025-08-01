@@ -8,6 +8,12 @@ const PORT = process.env.PORT || 8000;
 const MONGODB_URI =
   process.env.MONGODB_URI || "mongodb://localhost:27017/route-nest";
 
+app.use(
+  cors({
+    origin: "https://route-nest.onrender.com",
+  })
+);
+
 app.get("/api/trips", async (req, res) => {
   try {
     const trips = await TripData.find();
