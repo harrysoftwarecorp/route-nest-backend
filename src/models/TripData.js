@@ -41,6 +41,17 @@ const tripDataSchema = new mongoose.Schema({
     minlength: 1,
     maxlength: 100,
   },
+  length: {
+    type: Number,
+    required: true,
+    min: 0,
+    validate: {
+      validator: function (v) {
+        return typeof v === "number" && v >= 0;
+      },
+      message: "length must be a non-negative number",
+    },
+  },
   createdAt: {
     type: Date,
     default: Date.now,
